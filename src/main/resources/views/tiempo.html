@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAF32xL3QN-_imFzooi2vHWpDaJcS7CvfQ&callback=initMap">
+
+</script>
+<head th:include="header :: headerFragment">
+</head>
+<div th:include="header :: copy"></div>
+
+<div class="container">
+
+	<div class="jumbotron">
+		<h1
+			th:text="#{resultado.tiempoEn} +' '+ ${geoName.name} + '-'+ ${geoName.countryName} "></h1>
+		<h2>[[#{consulta.temperatura}]]</h2>
+		<div class="progress">
+			<div id="progressbar"
+				class="progress-bar progress-bar progress-bar-striped"
+				role="progressbar" th:aria-valuenow="${temperatura}"
+				aria-valuemin="-20" aria-valuemax="50"
+				th:text="${temperatura} +'º Centigrados'"></div>
+		</div>
+		<h3 th:text="'Humedad: '+ ${humedad}"></h3>
+		<h3 th:text="'Velocidad del viento: '+ ${velocidadViento}+ ' km/h '"></h3>
+
+		<h2 th:text="#{resultado.MapaDe(${geoName.name})}"></h2>
+		<div id="map"></div>
+
+		<p class="lead">[[#{volver.consulta.tiempo}]]</p>
+		<form action="consultaTiempo" th:object="${ciudad}"
+			th:action="@{/consultaTiempo}" method="post">
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="w-input-search"
+					name="nombre" value="Introduce la ciudad"
+					onclick="javascript: this.value=''"
+					onBlur="if ('' == (this.value)) this.value ='Introduce el nombre de una ciudad';">
+			</div>
+			<button type="submit" id="contact_submit"
+				class="btn btn-primary mb-2">[[#{busquedas.consultar}]]</button>
+			</br> </br>
+			<p class="lead">[[#{busquedas.recientes}]]</p>
+			<div th:each="a, iterStat : ${session.listaBusquedas}"
+				style="float: left;">
+				<a th:href="@{|/consultaTiempo?nombre=${a}|}"><span
+					th:text="!${iterStat.last} ? ${a} + ',  ' : ${a}"></span></a>
+
+			</div>
+		</form>
+	</div>
+
+	<div th:include="footer :: copy"></div>
+
+</div>
+
+<script th:inline="javascript">
+	/*<![CDATA[*/
+		var lati =  /*[[${geoName.lat}]]*/ ;
+		var longi = /*[[${geoName.lng}]]*/;
+	    var theList = /*[[${weathersObservation}]]*/;
+	  
+		/*]]>*/
+		var map;
+		function initMap() {
+			map = new google.maps.Map(document.getElementById('map'), {
+				center : {
+					lat :lati,
+					lng :longi 
+				},
+				zoom : 10
+			});
+		for (i = 0; i < theList.length; i++) {	    
+			var marker = new google.maps.Marker({
+				position : {
+					lat : theList[i].lat,
+					lng : theList[i].lng
+				},
+				map : map,
+				title : theList[i].stationName
+			});
+			  }
+		}
+		
+		
+	</script>
+
+<script th:inline="javascript">
+	  /*<![CDATA[*/
+	    var someValueToCheck = /*[[${temperatura}]]*/;
+		var valuePorcentaje = (someValueToCheck * 100) / 35;
+	  
+		/*]]>*/
+
+	  if(someValueToCheck < 10) {
+		  progressBarColor = "#5bc0de";
+		  $(".progress-bar").css('color', "black");	
+	  } else if(someValueToCheck >=10 && someValueToCheck <= 25) 
+		  progressBarColor = "#5cb85c";
+	  else if(someValueToCheck >25 && someValueToCheck <= 35)
+	  progressBarColor = "#f0ad4e";
+	  else if (someValueToCheck >35)
+		  progressBarColor = "#d9534f";
+	  $("#progressbar").css('background-color', progressBarColor);	 
+	  $(".progress-bar").css('width', String(valuePorcentaje)+"%");	
+	  </script>
+<style>
+#map {
+	height: 600px;
+	position: relative;
+	width: 100%;
+}
+
+.progress-bar-custom {
+	background-color: #497ad6;
+}
+
+.progress-bar-striped-custom {
+	background-image: linear-gradient(-45deg, #d2524e 25%, transparent 25%, transparent 50%,
+		#d2524e 50%, #d2524e 75%, transparent 75%, transparent);
+	background-size: 60px 60px;
+}
+}
+</style>
+</html>

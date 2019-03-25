@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head th:fragment="headerFragment">
+<meta charset="UTF-8" />
+<link rel="shortcut icon" th:href="@{/images/favicon.ico}">
+<title>[[#{aplicacion.title}]]</title>
+</head>
+
+<div th:fragment="copy" class="container">
+
+	<div class="container">
+
+		<div class="header clearfix">
+			<nav>
+				<ul class="nav nav-pills pull-right">
+					<li role="presentation"><a href="/tiempo">Inicio</a></li>
+					<li class="dropdown">
+					<a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-expanded="false">[[#{navbar.a.language}]]
+							<span class="caret"></span>
+					</a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a class="dropdown-item" th:href="@{?lang=es}">Español</a></li>
+							<li><a class="dropdown-item" th:href="@{?lang=gl}">Galego</a></li>
+						</ul></li>
+				</ul>
+			</nav>
+			<h3 class="text-muted">[[#{aplicacion.title}]]</h3>
+		</div>
+
+		<div th:if="${error}" class="alert alert-danger">
+			<strong th:text="${error}"> </strong>
+		</div>
+	</div>
+
+</div>
+
+</body>
+
+
+</html>

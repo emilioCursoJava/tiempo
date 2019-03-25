@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<head th:include="header :: headerFragment">
+</head>
+<div th:include="header :: copy"></div>
+
+<div class="container">
+
+	<div class="jumbotron">
+		<h1>[[#{index.bienvenida}]]</h1>
+		<p class="lead">[[#{index.consulta.tiempo}]].</p>
+		<form action="consultaTiempo" th:object="${ciudad544}"
+			th:action="@{/consultaTiempo}" method="post">
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="w-input-search"
+					name="nombre" value="Introduce la ciudad"
+					onclick="javascript: this.value=''"
+					onBlur="if ('' == (this.value)) this.value ='Introduce el nombre de una ciudad';">
+			</div>
+			<button type="submit" id="contact_submit"
+				class="btn btn-primary mb-2">[[#{busquedas.consultar}]]</button>
+			<div>
+				</br> </br>
+				<p th:if="${session.listaBusquedas}" class="lead">[[#{busquedas.recientes}]]</p>
+				<div th:each="a, iterStat : ${session.listaBusquedas}"
+					style="float: left;">
+					<a th:href="@{|/consultaTiempo?nombre=${a}|}"><p
+							th:text="!${iterStat.last} ? ${a} + ',  ' : ${a}" /></a>
+
+				</div>
+			</div>
+		</form>
+
+	</div>
+	<footer class="footer">
+		<div th:include="footer :: copy"></div>
+	</footer>
+
+</div>
+<!-- /container -->
+
+</body>
+
+
+</html>
